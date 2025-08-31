@@ -50,7 +50,6 @@ goto end
                 -v %cd%\cache\data:/data ^
                 -v %cd%\conf\docker\asa-api\cli:/usr/local/asa ^
                 -v %cd%\conf\docker\asa-api\api\server:/usr/local/fastapi ^
-                -v %cd%\task:/task ^
                 -v %cd%\app:/app ^
                 -p 8080:80 ^
                 --name %DOCKER_CONTAINER_NAME% ^
