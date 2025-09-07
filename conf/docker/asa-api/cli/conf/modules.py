@@ -7,12 +7,16 @@ from conf import attributes
 
 # Declare class
 class Infrastructure:
+    ## Declare member variable
+    ### Publish
     package = ""
     filename = ""
     name = ""
     path = ""
-    instance = None
+    ### Private
+    _instance = None
 
+    ## Declare constructor
     def __init__(self, module_name):
         f_module_path=f"{attributes.APP_A_DIR}/{module_name}.py"
         d_module_path=f"{attributes.APP_A_DIR}/{module_name}/main.py"
@@ -29,6 +33,7 @@ class Infrastructure:
         else:
             print(f"Error: Module '{module_name}' not found at '{attributes.APP_A_DIR}'")
 
+    ## Declare member method
     def short(self):
         """
         Show module file description base on #@DESC tags.
@@ -56,11 +61,16 @@ class Infrastructure:
         """
         try:
             sys.path.append(self.package)
-            if self.instance == None:
-                self.instance = importlib.import_module(self.filename)
             if hasattr(self.instance, "desc"):
                 self.instance.desc()
             else:
                 print(f"Error: 'desc' function not found in module {self.name}")
         except Exception as e:
             print(f"An error occurred: {e}")
+
+    ## Declare accessor
+    @property
+    def instance(self):
+        if self._instance == None:
+            self._instance = importlib.import_module(self.filename)
+        return self._instance
