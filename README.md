@@ -70,3 +70,8 @@ isa.bat dev
 # 進入開發容器
 isa.bat dev --into
 ```
+
+服務命令介面包括以下功能：
+
++ ```isa list [modeule_name]```：列舉可供控制的模塊
+	- 例如對 nginx 或 kafka 等基礎設施的操作服務

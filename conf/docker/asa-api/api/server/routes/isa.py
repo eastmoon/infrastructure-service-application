@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath('/usr/local'))
 sys.path.append(os.path.abspath('/usr/local/isa'))
 os.environ['PYTHON_CLI_DIR']="/usr/local/isa"
 os.environ['PYTHON_CLI_NAME']="isa"
-from asa import main
+from isa import main
 
 # Declare variable
 module = FastAPI()
@@ -31,9 +31,15 @@ def algorithm_service_command_description():
     captured_string = print2string(main.cli.print_help)
     return f"{captured_string}"
 
-@module.get("/ls", response_class=PlainTextResponse)
-def list_all_algorithm():
-    args = main.cli.parse_args(["ls"])
+@module.get("/list", response_class=PlainTextResponse)
+def list_all_modules():
+    args = main.cli.parse_args(["list"])
+    captured_string = print2string(args.func, args)
+    return f"{captured_string}"
+
+@module.get("/list/{module_name}", response_class=PlainTextResponse)
+def show_module_description(module_name: str):
+    args = main.cli.parse_args(["list", module_name])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
 

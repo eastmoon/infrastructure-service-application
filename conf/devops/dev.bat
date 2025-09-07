@@ -48,7 +48,7 @@ goto end
             @rem execute container
             docker run -d ^
                 -v %cd%\cache\data:/data ^
-                -v %cd%\conf\docker\asa-api\cli:/usr/local/asa ^
+                -v %cd%\conf\docker\asa-api\cli:/usr/local/isa ^
                 -v %cd%\conf\docker\asa-api\api\server:/usr/local/fastapi ^
                 -v %cd%\app:/app ^
                 -p 8080:80 ^
