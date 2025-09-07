@@ -1,10 +1,8 @@
 # Import libraries
 import os
-import sys
-import re
 import glob
-import importlib
 from conf import attributes
+from conf import modules
 
 # Declare variable
 
@@ -22,67 +20,15 @@ def exec(args):
         print("Module list:")
         # For recursive search, use '**' and set recursive=True
         ## Search all python file in application directories
-        files = glob.glob(f"{attributes.APP_A_DIR}/*.py")
+        files = glob.glob("*.py", root_dir=f"{attributes.APP_A_DIR}")
         for file in files:
-            file_name = os.path.basename(file)
-            algorithm_name = os.path.splitext(file_name)[0]
-            show_short(algorithm_name, file)
+            m = modules.Infrastructure(os.path.splitext(file)[0])
+            m.short()
         ## Search all main.py in application sub-directories
-        files = glob.glob(f"{attributes.APP_A_DIR}/*/main.py")
+        files = glob.glob("*/main.py", root_dir=f"{attributes.APP_A_DIR}")
         for file in files:
-            folder_path = os.path.dirname(file)
-            algorithm_name = os.path.basename(folder_path) # Returns "folder"
-            show_short(algorithm_name, file)
+            m = modules.Infrastructure(os.path.dirname(file))
+            m.short()
     else:
-        f_module_path=f"{attributes.APP_A_DIR}/{args.module_name}.py"
-        d_module_path=f"{attributes.APP_A_DIR}/{args.module_name}/main.py"
-        if os.path.exists(f_module_path):
-            show_desc(attributes.APP_A_DIR, args.module_name, args.module_name)
-        elif os.path.exists(d_module_path):
-            show_desc(f"{attributes.APP_A_DIR}/{args.module_name}", "main", args.module_name)
-        else:
-            print(f"Error: Module '{args.module_name}' not found at '{attributes.APP_A_DIR}'")
-
-def show_short(algorithm_name, file_path):
-    """
-    Show module file description base on #@DESC tags.
-
-    Args:
-        algorithm_name (str): The algorithm name.
-        file_path (str): The algorithm file paths.
-    """
-    try:
-        ## Search #@PARAME , #@DESC tag in algorithm file.
-        with open(file_path, 'r') as f:
-            print("")
-            desc = []
-            for line_num, line in enumerate(f, 1):
-                if re.search("^#@DESC", line):
-                    desc.append(line.split("#@DESC")[1].strip())
-        ## Show information with parser result.
-        print(f"{algorithm_name}")
-        for str in desc:
-            print(f" {str}")
-    except FileNotFoundError:
-        print(f"Error: File not found at '{file_path}'")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-def show_desc(package_dir, module_file, module_name):
-    """
-    Show module description with desc function.
-
-    Args:
-        package_dir (str): The package path which use to define new system path.
-        module_file (str): The module name which use to import.
-        module_name (str): The module name.
-    """
-    try:
-        sys.path.append(package_dir)
-        module_object = importlib.import_module(module_file)
-        if hasattr(module_object, "desc"):
-            module_object.desc()
-        else:
-            print(f"Error: 'desc' function not found in module {module_name}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        m = modules.Infrastructure(args.module_name)
+        m.desc()
