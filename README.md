@@ -73,5 +73,17 @@ isa.bat dev --into
 
 服務命令介面包括以下功能：
 
-+ ```isa list [modeule_name]```：列舉可供控制的模塊
-	- 例如對 nginx 或 kafka 等基礎設施的操作服務
+##### 列舉可供控制的模塊
+
+此設計用來列出目前專案中擁有的基礎設施處理模組，例如對 nginx 或 kafka 基礎設施的操作。
+
+使用 CLI 指令：
+
++ ```isa list```：搜尋所有模組，並顯示模組進入點檔案的 ```#@DESC``` 標籤內容
+	- 本專案繼承 [Algorithm service Application](https://github.com/eastmoon/algorithm-service-application) 專案設計概念，在專案 ```app``` 目錄層的 ```*.py``` 檔案或 ```*/main.py``` 目錄會被視為模組
++ ```isa list [module_name]```：用來顯示特定模組的解析說明，此動作會執行模組函示庫中的 ```desc()``` 函數  
+
+使用 API 指令：
+
++ ```http://localhost:8080/isa/list``` 與 ```isa list``` 功能相同
++ ```http://localhost:8080/isa/list/[module_name]``` 與 ```isa list [module_name]``` 功能相同
