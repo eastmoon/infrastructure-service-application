@@ -107,22 +107,38 @@ isa.bat dev --into
 
 基於以上描述，可使用 CLI 指令如下：
 
-+ ```isa conf --filename demo --methods get```：顯示 demo 配置檔的配置內容
-+ ```isa conf --filename demo --module m1 --methods get```：顯示 demo 配置檔中 m1 模組的配置內容
-+ ```isa conf --filename demo --module m1 --methods del```：移除 demo 配置檔中 m1 模組的配置內容
-+ ```echo demo_text | isa conf --filename demo --module m1 --methods post -i```：經由 STDIN 將 demo_text 字串寫入 demo 配置檔中 m1 模組的配置內容
-		- 對於 STDIN 也可以使用重定向 ( Redirections ) 的 Here Document 機制寫入內容，例如
-		```
-		isa conf --filename demo --module m1 --methods post -i << EOF
-		DEMO_TXT
-		EOF
-		```
-+ ```isa conf --filename demo --module m1 --methods post -f /data/m1.json```：經由 JSON 解析，將 ```/data/m1.json``` 檔案內容寫入 demo 配置檔中 m1 模組的配置內容
-		- 目前提供 JSON ( ```*.json``` )與 YAML ( ```*.yml```、```*.yaml``` ) 格式解析
+
++ 顯示 demo 配置檔的配置內容
+```
+isa conf --filename demo --methods get
+```
++ 顯示 demo 配置檔中 m1 模組的配置內容
+```
+isa conf --filename demo --module m1 --methods get
+```
++ 移除 demo 配置檔中 m1 模組的配置內容
+```
+isa conf --filename demo --module m1 --methods del
+```
++ 經由 STDIN 將 demo_text 字串寫入 demo 配置檔中 m1 模組的配置內容
+```
+echo demo_text | isa conf --filename demo --module m1 --methods post -i
+```
++ 經由 STDIN 重定向 ( Redirections ) 的 Here Document 機制寫入 demo 配置檔中 m1 模組的配置內容
+```
+isa conf --filename demo --module m1 --methods post -i << EOF
+DEMO_TXT
+EOF
+```
++ 經由 JSON 解析，將 ```/data/m1.json``` 檔案內容寫入 demo 配置檔中 m1 模組的配置內容
+	- 目前提供 JSON ( ```*.json``` )與 YAML ( ```*.yml```、```*.yaml``` ) 格式解析
+```
+isa conf --filename demo --module m1 --methods post -f /data/m1.json
+```
 
 使用 API 指令：
 
-+ ```GET http://localhost:8080/isa/conf/[filename]``` 與 ```isa conf --filename demo --methods get``` 功能相同
-+ ```GET http://localhost:8080/isa/conf/[filename]/[module]``` 與 ```isa conf --filename demo --module m1 --methods get``` 功能相同
-+ ```DELETE http://localhost:8080/isa/conf/[filename]/[module]``` 與 ```isa conf --filename demo --module m1 --methods del``` 功能相同
-+ ```POST http://localhost:8080/isa/conf/[filename]/[module] --data [json_string] ``` 與 ```echo [json_string] | isa conf --filename demo --module m1 --methods post -i``` 功能相同
++ ```GET http://localhost:8080/isa/conf/[filename]```：顯示 filename 配置檔的配置內容
++ ```GET http://localhost:8080/isa/conf/[filename]/[module]```：顯示 filename 配置檔中 module 模組的配置內容
++ ```DELETE http://localhost:8080/isa/conf/[filename]/[module]```：移除 filename 配置檔中 module 模組的配置內容
++ ```POST http://localhost:8080/isa/conf/[filename]/[module] --data [json_string] ```：將 json_string 內容寫入 filename 配置檔中 module 模組的配置內容
