@@ -39,7 +39,7 @@
 
 本專案預設於 Windows 環境設計，相關操作指令如下：
 
-#### 啟動環境
+### 啟動環境
 
 使用以下命令會啟動開發容器。
 
@@ -60,7 +60,7 @@ isa.bat dev
 + ```isa.bat dev --into```：進入開發容器
 + ```isa.bat dev --stop```：關閉開發容器
 
-#### 服務命令介面
+### 服務命令介面
 
 服務命令介面為容器內提供的 ```isa``` 命令介面，要執行相關指令必須先啟動開發環境並進入容器：
 
@@ -73,7 +73,7 @@ isa.bat dev --into
 
 服務命令介面包括以下功能：
 
-##### 列舉可供控制的模塊
+#### 列舉可供控制的模塊
 
 此設計用來列出目前專案中擁有的基礎設施處理模組，例如對 nginx 或 kafka 基礎設施的操作。
 
@@ -88,7 +88,7 @@ isa.bat dev --into
 + ```http://localhost:8080/isa/list``` 與 ```isa list``` 功能相同
 + ```http://localhost:8080/isa/list/[module_name]``` 與 ```isa list [module_name]``` 功能相同
 
-##### 配置檔讀取、修改、刪除
+#### 配置檔讀取、修改、刪除
 
 此設計用來彙整供專案執行的配置檔內容，而其配置檔為 YAML 格式且結構如下：
 
@@ -147,3 +147,15 @@ isa conf --filename demo --module m1 --methods post -f /data/m1.json
 + ```GET http://localhost:8080/isa/conf/[filename]/[module]```：顯示 filename 配置檔中 module 模組的配置內容
 + ```DELETE http://localhost:8080/isa/conf/[filename]/[module]```：移除 filename 配置檔中 module 模組的配置內容
 + ```POST http://localhost:8080/isa/conf/[filename]/[module] --data [json_string] ```：將 json_string 內容寫入 filename 配置檔中 module 模組的配置內容
+
+#### 執行配置檔
+
++ 依據配置檔編號執行配置檔
++ 配置檔內容會交付對應模塊處理
++ 模塊處理需確認服務容器存在
++ 若配置檔有描述需完成配置後重啟目標服務
+
+#### 管理的基礎設施狀態
+
++ 依據 docker-compose 檔案管理目標服務
++ 依據 DOCKER_CONTAINER_NAME 作為模糊搜尋出目標服務來管理
