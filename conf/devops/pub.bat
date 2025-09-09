@@ -13,11 +13,7 @@ goto end
 :action-prepare
     echo ^> Startup and into container for develop algorithm
     @rem build image
-    if NOT EXIST %cd%\conf\docker\isa\api (mkdir %cd%\conf\docker\isa\api)
-    if NOT EXIST %cd%\conf\docker\isa\cli (mkdir %cd%\conf\docker\isa\cli)
-    xcopy /Y /S %cd%\app\isa-api %cd%\conf\docker\isa\api
-    xcopy /Y /S %cd%\app\isa-cli %cd%\conf\docker\isa\cli
-    cd ./conf/docker/isa
+    cd ./conf/docker/asa-api
     docker build -t isa:%PROJECT_NAME% .
     cd %CLI_DIRECTORY%
 
@@ -52,9 +48,9 @@ goto end
             @rem execute container
             docker run -d ^
                 -v %cd%\cache\data:/data ^
-                -v %cd%\app\isa-api\server:/usr/local/fastapi ^
-                -v %cd%\app\isa-cli:/usr/local/isa ^
-                -v %cd%\app\modules:/app ^
+                -v %cd%\conf\docker\asa-api\cli:/usr/local/isa ^
+                -v %cd%\conf\docker\asa-api\api\server:/usr/local/fastapi ^
+                -v %cd%\app:/app ^
                 -p 8080:80 ^
                 --name %DOCKER_CONTAINER_NAME% ^
                 isa:%PROJECT_NAME% %TARGET_PROJECT_COMMAND%

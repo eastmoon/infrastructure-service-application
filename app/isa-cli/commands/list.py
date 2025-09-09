@@ -11,7 +11,7 @@ def conf(parser):
     ## command description
     new_parser = parser.add_parser('list', help='List moduels or show module description.', description=f"List all module in '{attributes.APP_A_DIR}', or give module name to show single module description.")
     ## command options and description
-    new_parser.add_argument('module_name', nargs='?', help='Infrastructure module name.')
+    new_parser.add_argument('module', nargs='?', help='Infrastructure module name.')
     ## command process function
     new_parser.set_defaults(func=exec, helper=new_parser.print_help)
 

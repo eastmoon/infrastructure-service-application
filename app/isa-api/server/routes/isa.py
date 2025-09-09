@@ -45,33 +45,33 @@ def show_module_description(module_name: str):
 
 @module.get("/conf", response_class=PlainTextResponse)
 def list_all_configuration_file():
-    args = main.cli.parse_args(["conf", "--methods", "list"])
+    args = main.cli.parse_args(["conf", "-m", "list"])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
 
-@module.get("/conf/{config_filename}", response_class=PlainTextResponse)
-def show_configuration_file_content(config_filename: str):
-    args = main.cli.parse_args(["conf", "--methods", "get", "--filename", config_filename])
+@module.get("/conf/{config_file}", response_class=PlainTextResponse)
+def show_configuration_file_content(config_file: str):
+    args = main.cli.parse_args(["conf", "-m", "get", config_file])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
 
-@module.get("/conf/{config_filename}/{module_name}", response_class=PlainTextResponse)
-def show_configuration_file_content(config_filename: str, module_name: str):
-    args = main.cli.parse_args(["conf", "--methods", "get", "--filename", config_filename, "--module", module_name])
+@module.get("/conf/{config_file}/{module_name}", response_class=PlainTextResponse)
+def show_configuration_file_content(config_file: str, module_name: str):
+    args = main.cli.parse_args(["conf", "-m", "get", config_file, module_name])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
 
-@module.post("/conf/{config_filename}/{module_name}", response_class=PlainTextResponse)
-async def update_configuration_file_content(config_filename: str, module_name: str, request: Request):
+@module.post("/conf/{config_file}/{module_name}", response_class=PlainTextResponse)
+async def update_configuration_file_content(config_file: str, module_name: str, request: Request):
     binary_body = await request.body()
     body = binary_body.decode("utf-8")
     sys.stdin = io.StringIO(body)
-    args = main.cli.parse_args(["conf", "--methods", "post", "--filename", config_filename, "--module", module_name, "-i"])
+    args = main.cli.parse_args(["conf", "-m", "post", "-i", config_file, module_name])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
 
-@module.delete("/conf/{config_filename}/{module_name}", response_class=PlainTextResponse)
-def show_configuration_file_content(config_filename: str, module_name: str):
-    args = main.cli.parse_args(["conf", "--methods", "del", "--filename", config_filename, "--module", module_name])
+@module.delete("/conf/{config_file}/{module_name}", response_class=PlainTextResponse)
+def show_configuration_file_content(config_file: str, module_name: str):
+    args = main.cli.parse_args(["conf", "-m", "del", config_file, module_name])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
