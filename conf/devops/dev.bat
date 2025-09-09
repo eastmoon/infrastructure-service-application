@@ -14,17 +14,17 @@ goto end
     echo ^> Startup and into container for develop algorithm
     @rem build image
     if NOT EXIST %cd%\conf\docker\isa\api (mkdir %cd%\conf\docker\isa\api)
+    if NOT EXIST %cd%\conf\docker\isa\api\server (mkdir %cd%\conf\docker\isa\api\server)
     if NOT EXIST %cd%\conf\docker\isa\cli (mkdir %cd%\conf\docker\isa\cli)
-    xcopy /Y /S %cd%\app\isa-api %cd%\conf\docker\isa\api
-    xcopy /Y /S %cd%\app\isa-cli %cd%\conf\docker\isa\cli
+    if NOT EXIST %cd%\conf\docker\isa\modules (mkdir %cd%\conf\docker\isa\modules)
+    xcopy /Y %cd%\app\api\docker-entrypoint.sh %cd%\conf\docker\isa\api\docker-entrypoint.sh
     cd ./conf/docker/isa
     docker build -t isa:%PROJECT_NAME% .
     cd %CLI_DIRECTORY%
 
     @rem create cache
-    IF NOT EXIST cache (
-        mkdir cache
-    )
+    IF NOT EXIST cache\develop (mkdir cache\develop)
+    IF NOT EXIST cache\develop\data (mkdir cache\develop\data)
     goto end
 
 :action-remove
@@ -51,9 +51,9 @@ goto end
 
             @rem execute container
             docker run -d ^
-                -v %cd%\cache\data:/data ^
-                -v %cd%\app\isa-api\server:/usr/local/fastapi ^
-                -v %cd%\app\isa-cli:/usr/local/isa ^
+                -v %cd%\cache\develop\data:/data ^
+                -v %cd%\app\api:/usr/local/fastapi ^
+                -v %cd%\app\cli:/usr/local/isa ^
                 -v %cd%\app\modules:/app ^
                 -p 8080:80 ^
                 --name %DOCKER_CONTAINER_NAME% ^

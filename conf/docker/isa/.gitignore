@@ -1,6 +1,7 @@
 # Project folder
 /api
 /cli
+/modules
 
 # third-party library
 

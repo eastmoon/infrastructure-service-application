@@ -16,7 +16,7 @@ def conf(parser):
     new_parser.set_defaults(func=exec, helper=new_parser.print_help)
 
 def exec(args):
-    if args.module_name == None:
+    if args.module == None:
         print("Module list:")
         # For recursive search, use '**' and set recursive=True
         ## Search all python file in application directories
@@ -30,5 +30,5 @@ def exec(args):
             m = infra.Module(os.path.dirname(file))
             m.short()
     else:
-        m = infra.Module(args.module_name)
+        m = infra.Module(args.module)
         m.desc()

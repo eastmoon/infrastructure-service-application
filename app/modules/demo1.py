@@ -3,15 +3,12 @@
 #@DESC 單一檔案的基礎設施模組範例
 
 # Import libraries
-import numpy as np
 
 # Declare variable
 
 # Declare function
 def main():
-    a = np.arange(6)
-    a2 = a[np.newaxis, :]
-    print(a2.shape)
+    print("It is demo module.")
 
 def desc():
     print("Show module configuration processing description.")

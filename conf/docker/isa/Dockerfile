@@ -21,9 +21,7 @@ RUN pip install \
     uvicorn[standard]
 
 # Install API server
-ADD ./api/docker-entrypoint.sh /docker-entrypoint.sh
-ADD ./api/server /usr/local/fastapi
-RUN chmod +rx /docker-entrypoint.sh
+ADD ./api /usr/local/fastapi
 
 # Step : Command line interface
 # Install CLI
@@ -36,6 +34,11 @@ cd /usr/local/isa
 python main.py \${@}
 EOF
 RUN chmod +x /bin/isa
+
+# Step : Install contents
+ADD ./modules /app
+ADD ./docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +rx /docker-entrypoint.sh
 
 # Setting
 WORKDIR /app
