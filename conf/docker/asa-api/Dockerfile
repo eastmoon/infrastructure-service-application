@@ -12,7 +12,18 @@ RUN pip install pyyaml
 
 # Install python requirement
 RUN pip install \
-    numpy
+    pyyaml
+
+# Step : Python FastAPI
+# Install FastAPI
+RUN pip install \
+    fastapi \
+    uvicorn[standard]
+
+# Install API server
+ADD ./api/docker-entrypoint.sh /docker-entrypoint.sh
+ADD ./api/server /usr/local/fastapi
+RUN chmod +rx /docker-entrypoint.sh
 
 # Step : Command line interface
 # Install CLI
@@ -25,17 +36,6 @@ cd /usr/local/isa
 python main.py \${@}
 EOF
 RUN chmod +x /bin/isa
-
-# Step : Python FastAPI
-# Install FastAPI
-RUN pip install \
-    fastapi \
-    uvicorn[standard]
-
-# Install API server
-ADD ./api/docker-entrypoint.sh /docker-entrypoint.sh
-ADD ./api/server /usr/local/fastapi
-RUN chmod +rx /docker-entrypoint.sh
 
 # Setting
 WORKDIR /app

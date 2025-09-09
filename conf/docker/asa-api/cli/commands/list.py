@@ -2,7 +2,7 @@
 import os
 import glob
 from conf import attributes
-from conf import modules
+from conf import infrastructures as infra
 
 # Declare variable
 
@@ -22,13 +22,13 @@ def exec(args):
         ## Search all python file in application directories
         files = glob.glob("*.py", root_dir=f"{attributes.APP_A_DIR}")
         for file in files:
-            m = modules.Infrastructure(os.path.splitext(file)[0])
+            m = infra.Module(os.path.splitext(file)[0])
             m.short()
         ## Search all main.py in application sub-directories
         files = glob.glob("*/main.py", root_dir=f"{attributes.APP_A_DIR}")
         for file in files:
-            m = modules.Infrastructure(os.path.dirname(file))
+            m = infra.Module(os.path.dirname(file))
             m.short()
     else:
-        m = modules.Infrastructure(args.module_name)
+        m = infra.Module(args.module_name)
         m.desc()

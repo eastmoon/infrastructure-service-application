@@ -107,7 +107,10 @@ isa.bat dev --into
 
 基於以上描述，可使用 CLI 指令如下：
 
-
++ 顯示所有的配置檔名稱
+```
+isa conf --methods list
+```
 + 顯示 demo 配置檔的配置內容
 ```
 isa conf --filename demo --methods get
@@ -132,12 +135,14 @@ EOF
 ```
 + 經由 JSON 解析，將 ```/data/m1.json``` 檔案內容寫入 demo 配置檔中 m1 模組的配置內容
 	- 目前提供 JSON ( ```*.json``` )與 YAML ( ```*.yml```、```*.yaml``` ) 格式解析
+	- 若未提供 ```--module``` 參數，預設會寫入於 default 模組
 ```
 isa conf --filename demo --module m1 --methods post -f /data/m1.json
 ```
 
 使用 API 指令：
 
++ ```GET http://localhost:8080/isa/conf```：顯示所有的配置檔名稱
 + ```GET http://localhost:8080/isa/conf/[filename]```：顯示 filename 配置檔的配置內容
 + ```GET http://localhost:8080/isa/conf/[filename]/[module]```：顯示 filename 配置檔中 module 模組的配置內容
 + ```DELETE http://localhost:8080/isa/conf/[filename]/[module]```：移除 filename 配置檔中 module 模組的配置內容
