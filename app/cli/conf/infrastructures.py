@@ -2,6 +2,8 @@
 import os
 import sys
 import re
+import shutil
+import subprocess
 import json
 import yaml
 import importlib
@@ -267,5 +269,109 @@ class Config:
         except Exception as e:
             print(f"An unexpected error occurred while processing '{filepath}': {e}")
         return res
+
+    ## Declare accessor
+
+class Manager:
+    ## Declare member variable
+    ### Publish
+    manager_cmd = "docker"
+    manager_conf = f"{attributes.APP_I_DIR}/docker-compose.yml"
+    manager_env = f"{attributes.APP_I_DIR}/docker-compose.env"
+    ### Private
+    _instance = None
+
+    ## Declare constructor
+    def __init__(self):
+        try:
+            Manager.env_check(isException=True)
+        except Exception as e:
+            raise e
+
+    ## Declare member method
+    @staticmethod
+    def env_check(isException: bool = False):
+        if not isException: print("Manager infrastructure : ")
+        if shutil.which(Manager.manager_cmd):
+            if not isException: print(f"[+] The command '{Manager.manager_cmd}' exists.")
+        else:
+            if isException:
+                raise Exception(f"The command '{Manager.manager_cmd}' does not exist or is not in PATH.")
+            else:
+                print(f"[-] The command '{Manager.manager_cmd}' does not exist or is not in PATH.")
+        if os.path.exists(Manager.manager_conf):
+            if not isException: print(f"[+] The file '{Manager.manager_conf}' exists.")
+        else:
+            if isException:
+                raise Exception(f"The file '{Manager.manager_conf}' does not exist.")
+            else:
+                print(f"[-] The file '{Manager.manager_conf}' does not exist.")
+        if os.path.exists(Manager.manager_env):
+            if not isException: print(f"[+] The file '{Manager.manager_env}' exists.")
+        else:
+            if isException:
+                raise Exception(f"The file '{Manager.manager_env}' does not exist.")
+            else:
+                print(f"[-] The file '{Manager.manager_env}' does not exist.")
+
+    def ps(self):
+        CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} ps --format=table{{{{.Name}}}}\\t{{{{.Service}}}}\\t{{{{.Status}}}}"
+        self._run_command(CMD.split())
+
+    def stats(self):
+        CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} stats --no-stream --format=table{{{{.Name}}}}\\t{{{{.CPUPerc}}}}\\t{{{{.MemUsage}}}}"
+        self._run_command(CMD.split())
+
+    def start(self):
+        CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} start"
+        self._call_command(command=CMD, isPrint=False)
+        CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} ps --format=table{{{{.Name}}}}\\t{{{{.Service}}}}\\t{{{{.Status}}}}"
+        self._run_command(CMD.split())
+
+    def stop(self):
+        CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} stop"
+        CMD = f"{CMD} $({self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} ps --format={{{{.Service}}}} | grep -v $(cat /etc/hostname))"
+        self._call_command(command=CMD, isPrint=False)
+        CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} ps --format=table{{{{.Name}}}}\\t{{{{.Service}}}}\\t{{{{.Status}}}}"
+        self._run_command(CMD.split())
+
+    def restart(self, service: str):
+        check_1 = f"cat /etc/hostname | grep {service} | wc -l"
+        res_1 = self._call_command(command=check_1, isPrint=False)
+        check_2 = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} ps --format={{{{.Service}}}} | grep {service} | wc -l"
+        res_2 = self._call_command(command=check_2, isPrint=False)
+        if bool(int(res_1.strip())):
+            print(f"Error: can not restart '{service}' itself.")
+        elif bool(int(res_2.strip())):
+            CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} restart {service}"
+            self._call_command(command=CMD, isPrint=True)
+        else:
+            print(f"Error: {service} does not find in starter containers.")
+
+    def _run_command(self, command: list, isPrint: bool = True):
+        # Use `shell=True` if the command requires shell features (like pipes or wildcards)
+        # `capture_output=True` is used here to prevent output from cluttering the console
+        # `check=True` would raise a CalledProcessError for non-zero exit codes,
+        # but we're manually checking the return code here for more granular control.
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+        )
+        if isPrint:
+            print(result.stdout)
+        else:
+            return resutl.stdout
+
+    def _call_command(self, command: str, isPrint: bool = True):
+        process = subprocess.Popen( command, shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT
+        )
+        stdout, stderr = process.communicate()
+        if isPrint:
+            print(stdout.decode("utf-8"))
+        else:
+            return stdout.decode("utf-8")
 
     ## Declare accessor

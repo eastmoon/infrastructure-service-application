@@ -1,32 +1,36 @@
 # Step : base
 FROM python:slim
 
-# Update linux package manager
-RUN apt-get update -y
-
-# Update python package manager
+## Update python package manager
 RUN pip install --upgrade pip
 
-# Install yaml parser tools
-RUN pip install pyyaml
-
-# Install python requirement
-RUN pip install \
-    pyyaml
+# Step : Install docker-cli
+RUN apt update -y && apt install -y \
+    apt-transport-https \
+    ca-certificates \
+    software-properties-common \
+    curl \
+    gnupg
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+RUN apt update -y && apt install -y \
+    docker-ce-cli \
+    docker-compose-plugin
 
 # Step : Python FastAPI
-# Install FastAPI
+## Install FastAPI
 RUN pip install \
     fastapi \
     uvicorn[standard]
-
-# Install API server
+## Install API server
 ADD ./api /usr/local/fastapi
 
 # Step : Command line interface
-# Install CLI
-ADD ./cli /usr/local/isa
+## Install python libraries
+RUN pip install pyyaml
 
+## Install CLI
+ADD ./cli /usr/local/isa
 RUN cat <<EOF > /bin/isa
 CLI_FILE=\${BASH_SOURCE##*/}
 export PYTHON_CLI_NAME=\${CLI_FILE%.*}
@@ -35,12 +39,13 @@ python main.py \${@}
 EOF
 RUN chmod +x /bin/isa
 
-# Step : Install contents
-ADD ./modules /app
+# Step : Install contents and setting container environment
+## Copy contents
+ADD ./modules /usr/local/app
 ADD ./docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +rx /docker-entrypoint.sh
 
-# Setting
-WORKDIR /app
+## Setting container startup
+WORKDIR /usr/local/app
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["apiserver"]

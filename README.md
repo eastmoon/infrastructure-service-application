@@ -183,5 +183,42 @@ isa exec [file]
 
 #### 管理的基礎設施狀態
 
-+ 依據 docker-compose 檔案管理目標服務
-+ 依據 DOCKER_CONTAINER_NAME 作為模糊搜尋出目標服務來管理
+此項指令用來執行基礎設施操作與管理，原則上 ISA 專案會啟動時會與相應基礎設施同屬一個區域網路，因此可以利用 Docker-in-Docker 並透過 Compose 指令來監控與管理目標容器。
+
+基於上述概念，此指令可執行必需包括以下設定與工具：
+
++ ISA 內有 Docker 指令，且設定使用 HOST 的 docker.sock 檔案
++ ISA 內有 docker-compose 設定檔
+
+其操作可使用 CLI 指令：
+
++ 顯示管理環境檢核
+```
+isa infra
+```
++ 顯示基礎設施容器資訊
+```
+isa infra ps
+```
++ 顯示基礎設施的資源數據
+```
+isa infra stats
+```
++ 啟動全體基礎設施服務
+```
+isa infra start
+```
++ 關閉全體基礎設施服務 ( 不包括 ISA 自身 )
+```
+isa infra stop
+```
++ 重啟目標基礎設施 ( 不可包括 ISA 自身 )
+```
+isa infra restart [container_name]
+```
+
+使用 API 路徑：
+
++ ```GET http://localhost:8080/isa/infra/```：顯示管理環境檢核
++ ```GET http://localhost:8080/isa/infra/ps```：顯示基礎設施容器資訊
++ ```GET http://localhost:8080/isa/infra/stats```：顯示基礎設施的資源數據

@@ -1,6 +1,6 @@
 # Algorithm directory
-APP_A_DIR="/app"
-# Data cache directory
-APP_D_DIR="/data"
-# Task directory
-APP_T_DIR="/task"
+APP_A_DIR="/usr/local/app"
+# Data directory
+APP_D_DIR="/var/local/app"
+# Infrastructure directory
+APP_I_DIR="/var/local/infra"

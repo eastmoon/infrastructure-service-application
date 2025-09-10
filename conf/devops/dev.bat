@@ -25,6 +25,11 @@ goto end
     @rem create cache
     IF NOT EXIST cache\develop (mkdir cache\develop)
     IF NOT EXIST cache\develop\data (mkdir cache\develop\data)
+
+    echo ^> Build virtual network
+    set network_exist=1
+    for /f "tokens=1" %%p in ('docker network ls --filter "name=%INFRA_DOCKER_NETWORK%" --format "{{.ID}}"') do (set network_exist=)
+    if defined network_exist (docker network create %INFRA_DOCKER_NETWORK%)
     goto end
 
 :action-remove
@@ -33,7 +38,10 @@ goto end
 
 :action
     @rem declare variable
-    set DOCKER_CONTAINER_NAME=isa-%PROJECT_NAME%
+    set VAR_SRV_PORT=8080
+    set VAR_SRV_HOSTNAME=isa
+    set DOCKER_CONTAINER_NAME=%VAR_SRV_HOSTNAME%-%PROJECT_NAME%
+    set INFRA_DOCKER_NETWORK=isa-network
 
     @rem management container
     if defined TARGET_PROJECT_STOP (
@@ -50,14 +58,23 @@ goto end
             call :action-remove
 
             @rem execute container
-            docker run -d ^
-                -v %cd%\cache\develop\data:/data ^
-                -v %cd%\app\api:/usr/local/fastapi ^
-                -v %cd%\app\cli:/usr/local/isa ^
-                -v %cd%\app\modules:/app ^
-                -p 8080:80 ^
-                --name %DOCKER_CONTAINER_NAME% ^
-                isa:%PROJECT_NAME% %TARGET_PROJECT_COMMAND%
+            echo ^> Start container with docker-compose
+            set DC_ENV=%CLI_DIRECTORY%\cache\docker-compose-dev.env
+            set DC_CONF=%CLI_DIRECTORY%\conf\docker\docker-compose-dev.yml
+            IF EXIST !DC_CONF! (
+                @rem create docker-compose env file
+                IF EXIST !DC_ENV! (del !DC_ENV!)
+                echo PROJECT_NAME=%PROJECT_NAME% > !DC_ENV!
+                echo PROJECT_DIR=%CLI_DIRECTORY% >> !DC_ENV!
+                echo SRV_HOSTNAME=%VAR_SRV_HOSTNAME% >> !DC_ENV!
+                echo SRV_IMAGE_NAME=isa:%PROJECT_NAME%  >> !DC_ENV!
+                echo SRV_CONTAINER_NAME=%DOCKER_CONTAINER_NAME% >> !DC_ENV!
+                echo SRV_PORT=%VAR_SRV_PORT% >> !DC_ENV!
+                echo INFRA_DOCKER_NETWORK=%INFRA_DOCKER_NETWORK% >> !DC_ENV!
+
+                @rem startup with docker-compose
+                docker compose --file !DC_CONF! --env-file !DC_ENV! up -d
+            )
         )
     )
     goto end

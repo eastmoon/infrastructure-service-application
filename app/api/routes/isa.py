@@ -81,3 +81,21 @@ async def update_configuration_file_content(config_file: str):
     args = main.cli.parse_args(["exec", config_file])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
+
+@module.get("/infra", response_class=PlainTextResponse)
+async def update_configuration_file_content():
+    args = main.cli.parse_args(["infra"])
+    captured_string = print2string(args.func, args)
+    return f"{captured_string}"
+
+@module.get("/infra/ps", response_class=PlainTextResponse)
+async def update_configuration_file_content():
+    args = main.cli.parse_args(["infra", "ps"])
+    captured_string = print2string(args.func, args)
+    return f"{captured_string}"
+
+@module.get("/infra/stats", response_class=PlainTextResponse)
+async def update_configuration_file_content():
+    args = main.cli.parse_args(["infra", "stats"])
+    captured_string = print2string(args.func, args)
+    return f"{captured_string}"
