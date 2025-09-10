@@ -75,3 +75,9 @@ def show_configuration_file_content(config_file: str, module_name: str):
     args = main.cli.parse_args(["conf", "-m", "del", config_file, module_name])
     captured_string = print2string(args.func, args)
     return f"{captured_string}"
+
+@module.post("/exec/{config_file}", response_class=PlainTextResponse)
+async def update_configuration_file_content(config_file: str):
+    args = main.cli.parse_args(["exec", config_file])
+    captured_string = print2string(args.func, args)
+    return f"{captured_string}"

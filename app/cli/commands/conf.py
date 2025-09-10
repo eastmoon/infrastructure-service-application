@@ -11,7 +11,7 @@ from conf import infrastructures as infra
 # Declare function
 def conf(parser):
     ## command description
-    new_parser = parser.add_parser('conf', help='Configuration module', description=f"Configuration a module with JSON or YAML string.")
+    new_parser = parser.add_parser('conf', help='Setting configuration file', description=f"Configuration a module with JSON or YAML string.")
     ## command options and description
     new_parser.add_argument("file", nargs='?', default="default", help="Which configuration file need assigned to. Default assign to 'default.yml'")
     new_parser.add_argument("module", nargs='?', default="default", help="Which module is the configuration assigned to.")

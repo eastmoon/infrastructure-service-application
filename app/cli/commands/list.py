@@ -16,19 +16,22 @@ def conf(parser):
     new_parser.set_defaults(func=exec, helper=new_parser.print_help)
 
 def exec(args):
-    if args.module == None:
-        print("Module list:")
-        # For recursive search, use '**' and set recursive=True
-        ## Search all python file in application directories
-        files = glob.glob("*.py", root_dir=f"{attributes.APP_A_DIR}")
-        for file in files:
-            m = infra.Module(os.path.splitext(file)[0])
-            m.short()
-        ## Search all main.py in application sub-directories
-        files = glob.glob("*/main.py", root_dir=f"{attributes.APP_A_DIR}")
-        for file in files:
-            m = infra.Module(os.path.dirname(file))
-            m.short()
-    else:
-        m = infra.Module(args.module)
-        m.desc()
+    try:
+        if args.module == None:
+            print("Module list:")
+            # For recursive search, use '**' and set recursive=True
+            ## Search all python file in application directories
+            files = glob.glob("*.py", root_dir=f"{attributes.APP_A_DIR}")
+            for file in files:
+                m = infra.Module(os.path.splitext(file)[0])
+                m.short()
+            ## Search all main.py in application sub-directories
+            files = glob.glob("*/main.py", root_dir=f"{attributes.APP_A_DIR}")
+            for file in files:
+                m = infra.Module(os.path.dirname(file))
+                m.short()
+        else:
+            m = infra.Module(args.module)
+            m.desc()
+    except Exception as e:
+        print(f"An error occurred: {e}")

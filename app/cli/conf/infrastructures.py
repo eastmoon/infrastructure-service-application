@@ -23,17 +23,17 @@ class Module:
         f_module_path=f"{attributes.APP_A_DIR}/{module_name}.py"
         d_module_path=f"{attributes.APP_A_DIR}/{module_name}/main.py"
         if os.path.exists(f_module_path):
-            self.package = attributes.APP_A_DIR
-            self.filename = module_name
+            self.package_root = attributes.APP_A_DIR
+            self.package = module_name
             self.name = module_name
             self.path = f_module_path
         elif os.path.exists(d_module_path):
-            self.package = f"{attributes.APP_A_DIR}/{module_name}"
-            self.filename = "main"
+            self.package_root = attributes.APP_A_DIR
+            self.package = f"{module_name}.main"
             self.name = module_name
             self.path = d_module_path
         else:
-            print(f"Error: Module '{module_name}' not found at '{attributes.APP_A_DIR}'")
+            raise Exception(f"Module '{module_name}' not found at '{attributes.APP_A_DIR}'")
 
     ## Declare member method
     def short(self):
@@ -62,7 +62,6 @@ class Module:
         Show module description with desc function.
         """
         try:
-            sys.path.append(self.package)
             if hasattr(self.instance, "desc"):
                 self.instance.desc()
             else:
@@ -70,11 +69,24 @@ class Module:
         except Exception as e:
             print(f"An error occurred: {e}")
 
+    def exec(self, config):
+        """
+        Show module description with desc function.
+        """
+        try:
+            if hasattr(self.instance, "exec"):
+                self.instance.exec(config)
+            else:
+                print(f"Error: 'exec' function not found in module {self.name}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
     ## Declare accessor
     @property
     def instance(self):
         if self._instance == None:
-            self._instance = importlib.import_module(self.filename)
+            sys.path.append(self.package_root)
+            self._instance = importlib.import_module(self.package)
         return self._instance
 
 class Config:
@@ -83,7 +95,6 @@ class Config:
     filename = ""
     path = ""
     ### Private
-    _instance = None
 
     ## Declare constructor
     def __init__(self, filename):
@@ -94,9 +105,20 @@ class Config:
             os.mkdir(self.rootPath)
 
     ## Declare member method
+    def load(self):
+        """
+        Load configuration file with 'self.path'.
+
+        Returns:
+            dict: If configuration file not exist, parser '{}' string, otherwise return configuration file content.
+        """
+        if os.path.exists(self.path):
+            return self._load_yaml(self.path)
+        return yaml.safe_load('{}')
+
     def read(self, module: str = "default"):
         """
-        Retrieve module content from configuration file.
+        Retrieve module content from configuration file and print to stdout.
         If module is 'default', retrieve all configuration content.
 
         Args:
@@ -104,7 +126,7 @@ class Config:
         """
         config_data : dict = None
         ## Read configuration file
-        config_data = self._load_config()
+        config_data = self.load()
         ## Show target module or all configuration
         if module == "default":
             print(yaml.dump(config_data, default_flow_style=False))
@@ -142,7 +164,7 @@ class Config:
                 print(f"Error: File '{path}' is unknown format.")
 
         ## Read configuration file
-        config_data = self._load_config()
+        config_data = self.load()
 
         ## Write new configuration into module category
         if input_data != None:
@@ -161,7 +183,7 @@ class Config:
         """
         config_data : dict = None
         ## Read configuration file\
-        config_data = self._load_config()
+        config_data = self.load()
         ## Delete target module
         if module in config_data:
             ## Delete module
@@ -203,17 +225,6 @@ class Config:
         except Exception as e:
             res = None
         return res
-
-    def _load_config(self):
-        """
-        Load configuration file with 'self.path'.
-
-        Returns:
-            dict: If configuration file not exist, parser '{}' string, otherwise return configuration file content.
-        """
-        if os.path.exists(self.path):
-            return self._load_yaml(self.path)
-        return yaml.safe_load('{}')
 
     def _load_json(self, filepath: str):
         """

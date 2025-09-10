@@ -4,19 +4,19 @@
 
 系統的基礎設施 ( Infrastructure ) 是指諸多完善且可運行的開源或閉源軟體，藉由運用此些軟體來補充系統的軟體服務基礎，讓開發的軟體能基於此些服務繼續擴大應用方面；例如，伺服器端 API 服務會配合相應的資料庫基礎設施。
 
-在微服物系統中，應用程式開通常會配置相應的基礎設施；然而，有些基礎設施提供的服務本身就是奠基在諸多互些串聯運作，例如藉由雲端儲存服務儲存伺服器日誌與數據，並經由流處理統計與分析，將相應結果提供給數據視覺化軟體呈現。
+在微服物系統中，應用程式開通常會配置相應的基礎設施；然而，有些基礎設施提供的服務要完整，需與其他服務串聯運作，例如藉由雲端儲存服務儲存伺服器日誌與數據，並經由流處理統計與分析，將相應結果提供給數據視覺化軟體呈現。
 
 在這種多基礎設施串聯構成的服務結構中，需提供基礎設施配置、執行、管理的流程與介面，從而讓其他應用程式能藉由遠端服務操控。
 
-基於上述概念，基礎設施服務應用程式是將對基礎設施的配置、執行、管理方法以容器封裝的服務應用程式，其專案基礎源於 [Algorithm service Application](https://github.com/eastmoon/algorithm-service-application) 的 FastAPI 框架，藉由處理 yaml 或 json 的配置資訊，進而控制與管理相應的基礎設施容器；因此，該服務應用程式應包括下述特性：
+基於上述概念，基礎設施服務應用程式是將對基礎設施的配置、執行、管理方法以容器封裝的服務應用程式，其專案基礎源於 [Algorithm service Application](https://github.com/eastmoon/algorithm-service-application) 的 FastAPI 框架概念，藉由 YAML 配置資訊，進而控制與管理相應的基礎設施容器；因此，該服務應用程式應包括下述特性：
 
 + 對 Host 的容器操作
 + 具有相關服務的配置目錄
-	- 依據服務名稱目錄在 /infra 目錄下
+	- 依據服務名稱目錄在 ```/data/conf``` 目錄下
 + 服務包括以下行為
 	- 列舉
+		+ 服務項目的處理模組
 		+ 工作流配置檔
-		+ 服務項目
 	- 建置工作流配置檔
 		+ 依據工作流需要添加配置資訊與行為
 		+ 對於可配置的服務對象，應為可添加的項目
@@ -75,7 +75,7 @@ isa.bat dev --into
 
 #### 列舉可供控制的模塊
 
-此設計用來列出目前專案中擁有的基礎設施處理模組，例如對 nginx 或 kafka 基礎設施的操作。
+此項指令用來列出目前專案中擁有的基礎設施處理模組，例如對 nginx 或 kafka 基礎設施的操作。
 
 使用 CLI 指令：
 
@@ -83,25 +83,25 @@ isa.bat dev --into
 	- 本專案繼承 [Algorithm service Application](https://github.com/eastmoon/algorithm-service-application) 專案設計概念，在專案 ```app``` 目錄層的 ```*.py``` 檔案或 ```*/main.py``` 目錄會被視為模組
 + ```isa list [module_name]```：用來顯示特定模組的解析說明，此動作會執行模組函示庫中的 ```desc()``` 函數  
 
-使用 API 指令：
+使用 API 路徑：
 
 + ```http://localhost:8080/isa/list``` 與 ```isa list``` 功能相同
 + ```http://localhost:8080/isa/list/[module_name]``` 與 ```isa list [module_name]``` 功能相同
 
 #### 配置檔讀取、修改、刪除
 
-此設計用來彙整供專案執行的配置檔內容，而其配置檔為 YAML 格式且結構如下：
+此項指令用來彙整供專案執行的配置檔內容，而其配置檔為 YAML 格式且結構如下：
 
 ```
 [module_name]:
-	{module_config}
+	{module_configuration}
 ```
 
 配置檔主要描述內容，是當該配置檔被執行時，提供給相應模組需要的配置內容，而模組會依據其設定內容對目標基礎設施進行操作。
 
 因此，配置檔操作會包括以下主要參數
 
-+ 配置檔名稱 ( filename )：要寫入的配置檔名，若未提供則寫入 default.yml 檔案
++ 配置檔名稱 ( file )：要寫入的配置檔名，若未提供則寫入 default.yml 檔案
 + 模組名稱 ( module )：要配置的模組名，若未提供則寫入 default 模組
 + 配置字串：提供給模組的配置內容字串，此字串可為 JSON 或 YAML 格式
 
@@ -113,23 +113,23 @@ isa conf --methods list
 ```
 + 顯示 demo 配置檔的配置內容
 ```
-isa conf --filename demo --methods get
+isa conf --methods get demo
 ```
 + 顯示 demo 配置檔中 m1 模組的配置內容
 ```
-isa conf --filename demo --module m1 --methods get
+isa conf --methods get demo m1
 ```
 + 移除 demo 配置檔中 m1 模組的配置內容
 ```
-isa conf --filename demo --module m1 --methods del
+isa conf --methods del demo m1
 ```
 + 經由 STDIN 將 demo_text 字串寫入 demo 配置檔中 m1 模組的配置內容
 ```
-echo demo_text | isa conf --filename demo --module m1 --methods post -i
+echo demo_text | isa conf --methods post -i demo m1
 ```
 + 經由 STDIN 重定向 ( Redirections ) 的 Here Document 機制寫入 demo 配置檔中 m1 模組的配置內容
 ```
-isa conf --filename demo --module m1 --methods post -i << EOF
+isa conf --methods post -i demo m1 << EOF
 DEMO_TXT
 EOF
 ```
@@ -137,10 +137,10 @@ EOF
 	- 目前提供 JSON ( ```*.json``` )與 YAML ( ```*.yml```、```*.yaml``` ) 格式解析
 	- 若未提供 ```--module``` 參數，預設會寫入於 default 模組
 ```
-isa conf --filename demo --module m1 --methods post -f /data/m1.json
+isa conf --methods post -f /data/m1.json demo m1
 ```
 
-使用 API 指令：
+使用 API 路徑：
 
 + ```GET http://localhost:8080/isa/conf```：顯示所有的配置檔名稱
 + ```GET http://localhost:8080/isa/conf/[filename]```：顯示 filename 配置檔的配置內容
@@ -150,10 +150,36 @@ isa conf --filename demo --module m1 --methods post -f /data/m1.json
 
 #### 執行配置檔
 
-+ 依據配置檔編號執行配置檔
-+ 配置檔內容會交付對應模塊處理
-+ 模塊處理需確認服務容器存在
-+ 若配置檔有描述需完成配置後重啟目標服務
+此項指令用來執行基礎設施操作，其操作內容則基於配置檔中對每個模組的描述。
+
+其操作可使用 CLI 指令：
+
+```
+isa exec [file]
+```
+
+其中 file 是指要執行的配置檔名，若目標配置檔不存在則不會執行，若未提供則使用 default.yml 配置檔。
+
+使用 API 路徑：
+
++ ```POST http://localhost:8080/isa/exec/[filename]```：執行目標 filename 配置檔
+
+配置檔執行會有其預設行為，倘若要改變行為，則設定於 ```global``` 模組或各模組的關鍵字，當前以規劃功能如下：
+
++ 模組執行順序
+		- 預設依據關鍵字的排序執行
+		- 若要強制順序則可設定 ```global.flow = [moduele_name_1, ..., module_name_N]```
++ 執行模組
+		- 預設關鍵字即為模組名稱
+		- 若要更換實際執行模組可設定 ```[module_name_1].module = 'module_name_2'```
+		- 實務上可以利用此方式將關鍵字做為標籤使用
+
+此外，考量基礎設施操作，各模組應具有以下關鍵字：
+
++ 配置對象容器資訊 ```[module_name].container = { name, port, restart }```
+		- ```name``` 為容器名稱，亦是其在虛擬網路的域名
+		- ```port``` 為容器開啟的連接埠
+		- ```restart``` 為容器是否需要重啟，若不提供預設為 False
 
 #### 管理的基礎設施狀態
 

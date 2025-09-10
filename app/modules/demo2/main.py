@@ -8,6 +8,10 @@
 def main():
     print("It is demo module.")
 
+def exec(config):
+    print("Execute module with config")
+    print(config)
+
 # Python entrypoint program
 if __name__ == '__main__':
     main()
