@@ -349,10 +349,6 @@ class Manager:
             print(f"Error: {service} does not find in starter containers.")
 
     def _run_command(self, command: list, isPrint: bool = True):
-        # Use `shell=True` if the command requires shell features (like pipes or wildcards)
-        # `capture_output=True` is used here to prevent output from cluttering the console
-        # `check=True` would raise a CalledProcessError for non-zero exit codes,
-        # but we're manually checking the return code here for more granular control.
         result = subprocess.run(
             command,
             capture_output=True,
