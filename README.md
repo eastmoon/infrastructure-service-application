@@ -49,9 +49,10 @@ isa.bat dev
 
 開發模式中會掛起不同目錄以便開發細節
 
-+ ```/app``` 目錄會掛入專案目錄 ```app``` ，用於基礎設施模組開發，亦是容器指定的工作目錄
++ ```/usr/local/app``` 目錄會掛入專案目錄 ```app``` ，用於基礎設施模組開發
 + ```/usr/local/isa``` 目錄會掛入專案目錄 ```conf/docker/cli```，用於服務命令介面開發
 + ```/usr/local/fastapi``` 目錄會掛入專案目錄 ```conf/docker/api```，用於 WebAPI 服務開發/
++ ```/test/``` 目錄會掛入專案測試目錄 ```test```，用於功能測試腳本開發，亦是容器指定的工作目錄
 
 開發模式會啟動 WebAPI 服務，可透過 HOST 主機連線則使用 ```http://localhost:8080``` 網址，並執行有開啟的路徑以執行相應的服務命令介面。
 
@@ -71,19 +72,25 @@ isa.bat dev
 isa.bat dev --into
 ```
 
+若要執行測試腳本，在進入開發容器後，以下指令執行相應腳本：
+
+```
+bash xxx.sh
+```
+
 服務命令介面包括以下功能：
 
 #### 列舉可供控制的模塊
 
 此項指令用來列出目前專案中擁有的基礎設施處理模組，例如對 nginx 或 kafka 基礎設施的操作。
 
-使用 CLI 指令：
+可使用 CLI 指令如下，操作範本參考[測試腳本](./test/isa-list-cli.sh)：
 
 + ```isa list```：搜尋所有模組，並顯示模組進入點檔案的 ```#@DESC``` 標籤內容
 	- 本專案繼承 [Algorithm service Application](https://github.com/eastmoon/algorithm-service-application) 專案設計概念，在專案 ```app``` 目錄層的 ```*.py``` 檔案或 ```*/main.py``` 目錄會被視為模組
 + ```isa list [module_name]```：用來顯示特定模組的解析說明，此動作會執行模組函示庫中的 ```desc()``` 函數  
 
-使用 API 路徑：
+可使用 API 路徑如下，操作範本參考[測試腳本](./test/isa-list-api.sh)：
 
 + ```http://localhost:8080/isa/list``` 與 ```isa list``` 功能相同
 + ```http://localhost:8080/isa/list/[module_name]``` 與 ```isa list [module_name]``` 功能相同
@@ -140,6 +147,13 @@ EOF
 isa conf --methods post -f /data/m1.json demo m1
 ```
 
+CLI 測試腳本包括如下：
+
++ [配置檔清單與內容擷取](./test/isa-conf-retrieve-cli.sh)
++ [利用 STDIN 寫入配置檔](./test/isa-conf-write-stdin-cli.sh)
++ [利用檔案寫入配置檔](./test/isa-conf-write-file-cli.sh)
++ [配置檔模組寫入與移除](./test/isa-conf-write-and-remove-cli.sh)
+
 使用 API 路徑：
 
 + ```GET http://localhost:8080/isa/conf```：顯示所有的配置檔名稱
@@ -148,11 +162,16 @@ isa conf --methods post -f /data/m1.json demo m1
 + ```DELETE http://localhost:8080/isa/conf/[filename]/[module]```：移除 filename 配置檔中 module 模組的配置內容
 + ```POST http://localhost:8080/isa/conf/[filename]/[module] --data [json_string] ```：將 json_string 內容寫入 filename 配置檔中 module 模組的配置內容
 
+CLI 測試腳本包括如下：
+
++ [配置檔清單與內容擷取](./test/isa-conf-retrieve-api.sh)
++ [配置檔模組寫入與移除](./test/isa-conf-write-and-remove-api.sh)
+
 #### 執行配置檔
 
 此項指令用來執行基礎設施操作，其操作內容則基於配置檔中對每個模組的描述。
 
-其操作可使用 CLI 指令：
+其操作可使用 CLI 指令，操作範本參考[測試腳本](./test/isa-exec-cli.sh)：：
 
 ```
 isa exec [file]
@@ -160,7 +179,7 @@ isa exec [file]
 
 其中 file 是指要執行的配置檔名，若目標配置檔不存在則不會執行，若未提供則使用 default.yml 配置檔。
 
-使用 API 路徑：
+使用 API 路徑，操作範本參考[測試腳本](./test/isa-exec-api.sh)：
 
 + ```POST http://localhost:8080/isa/exec/[filename]```：執行目標 filename 配置檔
 
@@ -190,7 +209,7 @@ isa exec [file]
 + ISA 內有 Docker 指令，且設定使用 HOST 的 docker.sock 檔案
 + ISA 內有 docker-compose 設定檔
 
-其操作可使用 CLI 指令：
+可使用 CLI 指令如下，操作範本參考[測試腳本](./test/isa-infra-cli.sh)：
 
 + 顯示管理環境檢核
 ```
@@ -217,7 +236,7 @@ isa infra stop
 isa infra restart [container_name]
 ```
 
-使用 API 路徑：
+可使用 API 路徑如下，操作範本參考[測試腳本](./test/isa-infra-api.sh)：
 
 + ```GET http://localhost:8080/isa/infra/```：顯示管理環境檢核
 + ```GET http://localhost:8080/isa/infra/ps```：顯示基礎設施容器資訊

@@ -14,7 +14,7 @@ def desc():
     print("Show module configuration processing description.")
 
 def exec(config):
-    print("Execute module with config")
+    print("Execute demo1 module with config")
     print(config)
 
 # Python entrypoint program

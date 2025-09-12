@@ -14,10 +14,12 @@ services:
       - ${PROJECT_DIR}/app/api:/usr/local/fastapi
       - ${PROJECT_DIR}/app/cli:/usr/local/isa
       - ${PROJECT_DIR}/app/modules:/usr/local/app
+      - ${PROJECT_DIR}/test:/test
       - ${PROJECT_DIR}/cache/develop/data:/var/local/app
       - ${PROJECT_DIR}/conf/docker/docker-compose-dev.yml:/var/local/infra/docker-compose.yml
       - ${PROJECT_DIR}/cache/docker-compose-dev.env:/var/local/infra/docker-compose.env
       - "//var/run/docker.sock:/var/run/docker.sock"
+    working_dir: /test
     networks:
       - srv-network
 
