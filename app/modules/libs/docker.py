@@ -15,6 +15,8 @@ class Service:
         self.__module = sys.modules[module]
         if 'container' in config:
             self.container = config['container']
+        if 'sys.attributes' in config:
+            self.container['sys'] = config['sys.attributes'].copy()
 
     ## Declare member method
     def exec(self):

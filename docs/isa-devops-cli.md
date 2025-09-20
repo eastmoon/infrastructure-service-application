@@ -16,11 +16,18 @@ isa.bat dev
 
 開發模式中會掛起不同目錄以便開發細節
 
-+ ```/usr/local/app``` 目錄會掛入專案目錄 ```app```- dev : 開發服務配置與服務操控
-	- pub : 發佈包括控制腳本與相關的容器服務配置檔
-	- pack：將服務配置檔與相關內容產出映像檔，並增加啟動腳 ，用於基礎設施模組開發
-+ ```/usr/local/isa``` 目錄會掛入專案目錄 ```conf/docker/cli```，用於服務命令介面開發
-+ ```/usr/local/fastapi``` 目錄會掛入專案目錄 ```conf/docker/api```，用於 WebAPI 服務開發/
++ ```/usr/local/isa``` 目錄會掛入專案目錄 ```app/cli```，用於服務命令介面開發
++ ```/usr/local/fastapi``` 目錄會掛入專案目錄 ```app/api```，用於 WebAPI 服務開發
++ ```/usr/local/module``` 目錄會掛入專案目錄 ```app/modules```，用於儲存處理模組
++ ```/var/local/isa``` 目錄會掛入專案目錄 ```cache/develop/data```，用於儲存服務需要的資料
+  - ```conf``` 用於儲存設定檔
++ ```/var/local/infra``` 目錄會掛入專案目錄 ```infra```，用於基礎設施的共享目錄
+  - 若基礎設施要共享目錄，應根據服務名稱建立子目錄
+      + ```host``` 固定提供管理服務群的 docker-compose 資訊
+  - 若基礎設施有多個目錄要共享，應基於功能子目錄以便於相關操作
+      + ```template``` 提供給樣板操作的樣板檔案
+      + ```api``` 提供 RestAPI 操作需要的內容
+      + ```ssh``` 提供 SSH 操作需要的密鑰資訊
 + ```/test/``` 目錄會掛入專案測試目錄 ```test```，用於功能測試腳本開發，亦是容器指定的工作目錄
 
 開發模式會啟動 WebAPI 服務，可透過 HOST 主機連線則使用 ```http://localhost:8080``` 網址，並執行有開啟的路徑以執行相應的服務命令介面。

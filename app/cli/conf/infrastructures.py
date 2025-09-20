@@ -276,8 +276,8 @@ class Manager:
     ## Declare member variable
     ### Publish
     manager_cmd = "docker"
-    manager_conf = f"{attributes.APP_I_DIR}/docker-compose.yml"
-    manager_env = f"{attributes.APP_I_DIR}/docker-compose.env"
+    manager_conf = f"{attributes.APP_I_DIR}/host/docker-compose.yml"
+    manager_env = f"{attributes.APP_I_DIR}/host/docker-compose.env"
     ### Private
     _instance = None
 

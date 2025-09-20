@@ -28,6 +28,12 @@ def exec(args):
     else:
         keys = [m for m in c]
         keys.sort()
+    ## Translate attribute module to dict object.
+    attr_dict = {}
+    for key in dir(attributes):
+        attr = getattr(attributes, key)
+        if not callable(key) and not key.startswith('__'):
+            attr_dict[key] = attr
     ##
     for module in keys:
         try:
@@ -35,6 +41,7 @@ def exec(args):
             if isinstance(c[module], dict) and "module" in c[module]:
                 module_name = c[module]["module"]
             m = infra.Module(module_name)
+            c[module]['sys.attributes'] = attr_dict
             m.exec(c[module])
         except Exception as e:
             print(f"An error occurred: {e}")
