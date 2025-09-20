@@ -29,6 +29,20 @@
 	- pub : 發佈包括控制腳本與相關的容器服務配置檔
 	- pack：將服務配置檔與相關內容產出映像檔，並增加啟動腳
 
+若從設計細節來討論，ISA 專案是基於容器環境下的簡易 [Ansible](https://github.com/eastmoon/infra-ansible) 專案，其相同設計概念：
+
++ 配置檔 ( Configuration file ) 即為 [Ansible Playbook](https://docs.ansible.com/ansible/latest/reference_appendices/playbooks_keywords.html)
++ 處理模組 ( Module ) 即為 [Ansible Module](https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html)
+
+其差異在於：
+
++ 專案結構簡易
++ 服務對象為同容器虛擬網路下的服務單元
++ 精簡對外 API 接口
++ 模組處理可自行規劃與定義
+
+但實務若有需要可以整合 Ansible 框架，並加以運用 ansible 的處理模組。
+
 ## 適用情境
 
 + 封裝基礎建設項目的服務配置、執行、控制相關函式庫與腳本
