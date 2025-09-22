@@ -4,8 +4,8 @@
 set -e
 
 if [ "$1" = "apiserver" ]; then
-    if [ -e /usr/local/fastapi/main.py ]; then
-        cd /usr/local/fastapi
+    if [ -e /usr/local/isa/api/main.py ]; then
+        cd /usr/local/isa/api
         uvicorn main:app --reload --port 80 --host 0.0.0.0
     else
         echo "FastAPI entrypoint not find."

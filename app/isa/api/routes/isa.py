@@ -7,11 +7,11 @@ from fastapi.responses import PlainTextResponse
 from typing import Union
 
 # Import algorithm-service-application command-interface-line pacakge
-sys.path.append(os.path.abspath('/usr/local'))
 sys.path.append(os.path.abspath('/usr/local/isa'))
-os.environ['PYTHON_CLI_DIR']="/usr/local/isa"
+sys.path.append(os.path.abspath('/usr/local/isa/cli'))
+os.environ['PYTHON_CLI_DIR']="/usr/local/isa/cli"
 os.environ['PYTHON_CLI_NAME']="isa"
-from isa import main
+from cli import main
 
 # Declare variable
 module = FastAPI()

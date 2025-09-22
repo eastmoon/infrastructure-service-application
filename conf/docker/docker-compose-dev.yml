@@ -12,8 +12,7 @@ services:
       - ${SRV_PORT}:80
     volumes:
       - ${PROJECT_DIR}/test:/test
-      - ${PROJECT_DIR}/app/api:/usr/local/fastapi
-      - ${PROJECT_DIR}/app/cli:/usr/local/isa
+      - ${PROJECT_DIR}/app/isa:/usr/local/isa
       - ${PROJECT_DIR}/app/modules:/usr/local/modules
       - ${PROJECT_DIR}/cache/develop/data:/var/local/modules
       - ${PROJECT_DIR}/infra:/var/local/infra
