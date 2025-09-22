@@ -28,6 +28,8 @@ services:
     container_name: ${SRV_CONTAINER_NAME}-nginx
     ports:
       - 8081:80
+    volumes:
+      - ${PROJECT_DIR}/infra/nginx/conf.d:/etc/nginx/conf.d:ro
     networks:
       - srv-network
 

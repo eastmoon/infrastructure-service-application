@@ -25,7 +25,9 @@ RUN pip install \
 
 # Step : Command line interface
 ## Install python libraries
-RUN pip install pyyaml
+RUN pip install \
+    pyyaml \
+    requests
 
 ## Install CLI & API
 ADD ./cli /usr/local/isa/cli

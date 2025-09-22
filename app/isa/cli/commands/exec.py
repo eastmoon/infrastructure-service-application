@@ -42,6 +42,7 @@ def exec(args):
                 module_name = c[module]["module"]
             m = infra.Module(module_name)
             c[module]['sys.attributes'] = attr_dict
+            c[module]['sys.manager'] = infra.Manager()
             m.exec(c[module])
         except Exception as e:
             print(f"An error occurred: {e}")

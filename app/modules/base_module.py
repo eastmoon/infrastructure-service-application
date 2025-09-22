@@ -24,7 +24,7 @@ def exec(config):
     """
     print("Execute module with config.")
     s = Service(config, exec.__module__)
-    s.exec()
+    s.run()
 
 def container(service, config):
     """

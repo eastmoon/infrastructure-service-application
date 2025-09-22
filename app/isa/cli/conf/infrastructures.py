@@ -322,6 +322,10 @@ class Manager:
         CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} stats --no-stream --format=table{{{{.Name}}}}\\t{{{{.CPUPerc}}}}\\t{{{{.MemUsage}}}}"
         self._run_command(CMD.split())
 
+    def exec(self, service_name, command):
+        CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} exec {service_name} {command}"
+        self._run_command(CMD.split())
+
     def start(self):
         CMD = f"{self.manager_cmd} compose --file {self.manager_conf} --env-file {self.manager_env} start"
         self._call_command(command=CMD, isPrint=False)
