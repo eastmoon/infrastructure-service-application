@@ -42,11 +42,12 @@ RUN chmod +x /bin/isa
 
 # Step : Install contents and setting container environment
 ## Copy contents
-ADD ./modules /usr/local/app
+ADD ./modules /usr/local/modules
+ADD ./configs /usr/local/configs
 ADD ./docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +rx /docker-entrypoint.sh
 
 ## Setting container startup
-WORKDIR /usr/local/app
+WORKDIR /usr/local/configs
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["apiserver"]

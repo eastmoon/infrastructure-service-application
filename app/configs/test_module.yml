@@ -1,0 +1,6 @@
+case1:
+  module: simple_module
+  value: 5678
+case2:
+  module: simple_module
+  value: 1234

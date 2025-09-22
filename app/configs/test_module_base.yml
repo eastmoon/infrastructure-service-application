@@ -1,0 +1,38 @@
+case:
+  authorize: setting target container authorize.
+  command:
+  - cmd: template
+    data:
+      file: demo.loc
+      keys:
+        VALUE: '1758533249'
+      to: conf.d/demo.loc
+    msg: Copy location file to conf.d folder.
+  - cmd: restart
+    msg: Restart service.
+  - cmd: sleep
+    msg: Sleep and wait.
+    time: 1
+  - cmd: api
+    data:
+      method: GET
+      url: /value
+    msg: Call API with new location file.
+  - cmd: api
+    data:
+      method: get
+      url: https://jsonplaceholder.typicode.com/users
+    msg: Call API with outside server.
+  - cmd: exec
+    data: ls -al
+    msg: Call Docker exec command.
+  - cmd: other-command
+    data: do something
+    msg: Do other function
+  container:
+    name: nginx
+    port: 80
+  module: base_module
+  nomatch: unknown content, can not match to any function
+  other: setting target with module other function
+  secure: setting target container secure.

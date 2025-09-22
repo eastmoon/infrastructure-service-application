@@ -1,0 +1,33 @@
+demo:
+- echo
+- essage
+demoEOF:
+  eof: string
+  hello: world
+demoJSONFile:
+  employee:
+  - 1
+  - 2
+  - 3
+  - 4
+  global:
+    debug: 'yes'
+    debugging:
+      detailed: 'no'
+      header: debugging started
+    verbose: 'no'
+  output:
+    file: 'yes'
+demoYAMLFile:
+  employee:
+  - Jacky
+  - Danny
+  - James
+  global:
+    debug: true
+    debugging:
+      detailed: false
+      header: debugging started
+    verbose: false
+  output:
+    file: 'yes'

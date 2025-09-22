@@ -1,0 +1,4 @@
+demo: 1234
+demoEOF:
+- key: value
+- hello: world

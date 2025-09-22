@@ -22,20 +22,20 @@ class Module:
 
     ## Declare constructor
     def __init__(self, module_name):
-        f_module_path=f"{attributes.APP_A_DIR}/{module_name}.py"
-        d_module_path=f"{attributes.APP_A_DIR}/{module_name}/main.py"
+        f_module_path=f"{attributes.APP_M_DIR}/{module_name}.py"
+        d_module_path=f"{attributes.APP_M_DIR}/{module_name}/main.py"
         if os.path.exists(f_module_path):
-            self.package_root = attributes.APP_A_DIR
+            self.package_root = attributes.APP_M_DIR
             self.package = module_name
             self.name = module_name
             self.path = f_module_path
         elif os.path.exists(d_module_path):
-            self.package_root = attributes.APP_A_DIR
+            self.package_root = attributes.APP_M_DIR
             self.package = f"{module_name}.main"
             self.name = module_name
             self.path = d_module_path
         else:
-            raise Exception(f"Module '{module_name}' not found at '{attributes.APP_A_DIR}'")
+            raise Exception(f"Module '{module_name}' not found at '{attributes.APP_M_DIR}'")
 
     ## Declare member method
     def short(self):
@@ -101,7 +101,7 @@ class Config:
     ## Declare constructor
     def __init__(self, filename):
         self.filename=filename
-        self.rootPath=f"{attributes.APP_D_DIR}/conf"
+        self.rootPath=f"{attributes.APP_C_DIR}"
         self.path=f"{self.rootPath}/{filename}.yml"
         if not os.path.exists(self.rootPath):
             os.mkdir(self.rootPath)

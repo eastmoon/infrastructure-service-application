@@ -14,7 +14,7 @@ services:
       - ${PROJECT_DIR}/test:/test
       - ${PROJECT_DIR}/app/isa:/usr/local/isa
       - ${PROJECT_DIR}/app/modules:/usr/local/modules
-      - ${PROJECT_DIR}/cache/develop/data:/var/local/modules
+      - ${PROJECT_DIR}/app/configs:/usr/local/configs
       - ${PROJECT_DIR}/infra:/var/local/infra
       - ${PROJECT_DIR}/conf/docker/docker-compose-dev.yml:/var/local/infra/host/docker-compose.yml
       - ${PROJECT_DIR}/cache/docker-compose-dev.env:/var/local/infra/host/docker-compose.env

@@ -28,7 +28,7 @@ def exec(args):
     match args.methods:
         case Methods.LIST:
             ### Show all configuration file in conf folder
-            files = glob.glob("*.yml", root_dir=f"{attributes.APP_D_DIR}/conf")
+            files = glob.glob("*.yml", root_dir=f"{attributes.APP_C_DIR}")
             for file in files:
                 print(os.path.splitext(file)[0])
         case Methods.GET:

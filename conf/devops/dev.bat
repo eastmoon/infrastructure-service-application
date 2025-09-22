@@ -14,9 +14,9 @@ goto end
     echo ^> Startup and into container for develop algorithm
     @rem build image
     if NOT EXIST %cd%\conf\docker\isa\api (mkdir %cd%\conf\docker\isa\api)
-    if NOT EXIST %cd%\conf\docker\isa\api\server (mkdir %cd%\conf\docker\isa\api\server)
     if NOT EXIST %cd%\conf\docker\isa\cli (mkdir %cd%\conf\docker\isa\cli)
     if NOT EXIST %cd%\conf\docker\isa\modules (mkdir %cd%\conf\docker\isa\modules)
+    if NOT EXIST %cd%\conf\docker\isa\configs (mkdir %cd%\conf\docker\isa\configs)
     xcopy /Y %cd%\app\api\docker-entrypoint.sh %cd%\conf\docker\isa\api\docker-entrypoint.sh
     cd ./conf/docker/isa
     docker build -t isa:%PROJECT_NAME% .
@@ -24,7 +24,6 @@ goto end
 
     @rem create cache
     IF NOT EXIST cache\develop (mkdir cache\develop)
-    IF NOT EXIST cache\develop\data (mkdir cache\develop\data)
 
     echo ^> Build virtual network
     set network_exist=1

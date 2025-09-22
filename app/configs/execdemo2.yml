@@ -1,0 +1,14 @@
+demo1:
+  exec: demo1
+  key: value
+demo2:
+  exec: demo2
+  key: value
+m1:
+  exec: m1
+  key: value
+  module: demo1
+m2:
+  exec: m2
+  key: value
+  module: demo2
